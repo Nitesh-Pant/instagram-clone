@@ -6,10 +6,19 @@ import Footer from './components/Footer';
 import AddPost from './components/AddPost';
 import Profile from './components/Profile';
 import Search from './components/Search';
+import { useState, createContext, useContext } from "react";
 
+
+export const context = createContext();
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false)
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
+    <context.Provider value={{darkMode, toggleDarkMode}}>
     <div className="App">
       <header className="App-header">
         <div className='container'>
@@ -24,6 +33,7 @@ function App() {
         </div>
       </header>
     </div>
+    </context.Provider>
   );
 }
 

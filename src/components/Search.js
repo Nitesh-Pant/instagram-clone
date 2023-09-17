@@ -40,7 +40,7 @@ const Search = () => {
         },
         input: {
             width: '90%',
-            borderRadius: '10%',
+            borderRadius: '75px',
             margin: '10px',
             height: '40px'
         }

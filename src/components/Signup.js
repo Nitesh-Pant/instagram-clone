@@ -1,3 +1,4 @@
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 import React, { useState } from 'react'
 import { useNavigate, Link } from "react-router-dom";
 
@@ -67,8 +68,8 @@ export const Signup = () => {
         <div>
             <form onSubmit={e => { handleSubmit(e) }}>
                 <input type="text" id="avatar" placeholder="avatar link" name="avatar" onChange={e => setAvatar(e.target.value)} style={styles.input}/><br></br>
-                <input type="text" id="username" placeholder="username" name="username" onChange={e => setUsername(e.target.value)} style={styles.input}/><br></br>
-                <input type="password" id="password" placeholder="password" name="password" onChange={e => setPassword(e.target.value)} style={styles.input}/><br></br>
+                <input type="text" id="username" placeholder="username" name="username" onChange={e => setUsername(e.target.value)} required style={styles.input}/><br></br>
+                <input type="password" id="password" placeholder="password" name="password" onChange={e => setPassword(e.target.value)} required style={styles.input}/><br></br>
                 <button style={styles.login}>Signup</button>
             </form>
             <p style={styles.or}>or</p>

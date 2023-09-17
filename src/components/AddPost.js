@@ -89,7 +89,7 @@ function AddPost() {
         {/*https://static.freeimages.com/assets/icons/expand.svg*/}
         <div style={styles.mid}>
             <form onSubmit={e => { handleSubmit(e) }}>
-                <input type="text" id="imageLink" placeholder='Add Image Link' name="imageLink" onChange={e => setImageLink(e.target.value)} style={styles.input}/><br></br>
+                <input type="text" id="imageLink" placeholder='Add Image Link' name="imageLink" onChange={e => setImageLink(e.target.value)} required style={styles.input}/><br></br>
                 <input type="text" id="caption" placeholder='Add Caption' name="caption" onChange={e => setCaption(e.target.value)} style={styles.input}/><br></br>
                 <button style={styles.addButton}>Post</button>
             </form>
