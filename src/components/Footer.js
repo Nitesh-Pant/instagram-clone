@@ -1,6 +1,5 @@
 import React from 'react'
 import { HomePost } from './HomePost'
-import { useState, useEffect } from "react";
 import Foot from './Foot';
 
 const Footer = () => {
@@ -39,15 +38,6 @@ const Footer = () => {
   const instagramURL = '../icon/instagram-text-icon.png';
   const heartURL = '../icon/heart.png';
 
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const local = localStorage.getItem('store');
-
-    fetch("http://localhost:3001/posts/" + local)
-    .then(response => response.json())
-    .then(data => setPosts(data))
-  },[])
 
   return (
     <div>
@@ -56,20 +46,9 @@ const Footer = () => {
         <img src={heartURL} alt="Heart Icon" style={styles.wrapper} />
       </div>
       <div style={styles.postDiv}>
-        { posts &&
-          posts.map((post, index) => (
-            <HomePost
-              id={post.userId}
-              username={post.username}
-              caption={post.caption}
-              img={post.imageLink}
-              avatar={post.avatar}
-            />
-          ))
-        }
-        <Foot/>
+        <HomePost />
+        <Foot />
       </div>
-      
     </div>
   )
 }

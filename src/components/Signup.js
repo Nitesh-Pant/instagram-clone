@@ -33,20 +33,78 @@ export const Signup = () => {
             marginTop: '12px'
         },
     }
-    const [avatar, setAvatar] = useState('' | null)
+    const [avatar, setAvatar] = useState(null)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [bio, setBio] = useState(null)
+    
+    const [errorMessage, setErrorMessage] = useState('')
+    const [isError, setIsError] = useState(false)
+
+
+    const [stepOne, setStepOne] = useState(true)
+    const [stepTwo, setStepTwo] = useState(false)
+    const [stepThree, setStepThree] = useState(false)
+
+
+
 
   const instagramIcon = '../icon/instagram-text-icon.png';
   const navigate = useNavigate();
 
 
-  const handleSubmit = async (e) => {
-    console.log({'avatarLink': avatar, 'username': username, 'password': password})
-    e.preventDefault();
-    const data = {'avatarLink': avatar, 'username': username, 'password': password}
+  const usernameCheck = async (e) => {
+    const uname = e.target.value;
+    setUsername(e.target.value)
+    const data = {'username': uname}
     
-    const response = await fetch('http://localhost:3001/signup', {
+    if(uname.length > 3){
+        const response = await fetch('http://localhost:3001/signup/step1', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const result = await response.json();
+        console.log(uname);
+        console.log(result);
+
+        if(result.msg == "Username already taken"){
+            setErrorMessage(result.msg)
+            setIsError(true)
+        }
+        else{
+            setIsError(false)
+        }
+    }
+    else{
+        setIsError(false)
+    }
+  }
+
+  const handleUsername = async (e) => {
+    console.log({'username': username})
+    e.preventDefault();
+    setStepOne(false)
+    setStepTwo(true)
+  }
+
+  const handlePassword = async (e) => {
+    console.log({'password': password})
+    e.preventDefault();
+    if(password.length > 7){
+        setStepTwo(false)
+        setStepThree(true)
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    console.log({'username': username, 'password': password, 'bio': bio, 'avatarLink': avatar})
+    e.preventDefault();
+    const data = {'username': username, 'password': password, 'bio': bio, 'avatarLink': avatar}
+    
+    const response = await fetch('http://localhost:3001/signup/step2', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -56,7 +114,11 @@ export const Signup = () => {
     const result = await response.json();
     console.log(result);
     if(result.msg == 'User signed up successfully'){
+        setStepThree(false)
         navigate("/Login");
+    }
+    else{
+        console.log('testttt')
     }
   }
 
@@ -66,12 +128,29 @@ export const Signup = () => {
             <img src={instagramIcon} alt="new" style={styles.logo}/>
         </div>
         <div>
-            <form onSubmit={e => { handleSubmit(e) }}>
-                <input type="text" id="avatar" placeholder="avatar link" name="avatar" onChange={e => setAvatar(e.target.value)} style={styles.input}/><br></br>
-                <input type="text" id="username" placeholder="username" name="username" onChange={e => setUsername(e.target.value)} required style={styles.input}/><br></br>
-                <input type="password" id="password" placeholder="password" name="password" onChange={e => setPassword(e.target.value)} required style={styles.input}/><br></br>
-                <button style={styles.login}>Signup</button>
-            </form>
+            {stepOne ? 
+                (<form onSubmit={e => { handleUsername(e) }}>
+                    <input type="text" id="username" placeholder="username" name="username" onChange={usernameCheck} required style={styles.input}/><br></br>
+                    {isError && <div style={{color: 'red', fontSize: '15px', marginBottom: '0px'}}> {errorMessage} </div>}<br></br>
+                    <button style={styles.login} disabled={username.length < 4}>Continue</button>
+                </form>) :
+                <></>
+            }
+            {stepTwo ?
+                (<form onSubmit={e => { handlePassword(e) }}>
+                    <input type="password" id="password" placeholder="password" name="password" onChange={e => setPassword(e.target.value)} required style={styles.input}/><br></br>
+                    <button style={styles.login} disabled={username.length < 4}>Continue</button>
+                </form>):
+                <></>
+            }
+            {stepThree ?
+                (<form onSubmit={e => { handleSubmit(e) }}>
+                    <input type="text" id="avatar" placeholder="avatar link" name="avatar" onChange={e => setAvatar(e.target.value)} style={styles.input}/><br></br>
+                    <input type="text" id="bio" placeholder="bio" name="bio" onChange={e => setBio(e.target.value)} style={styles.input}/><br></br>
+                    <button style={styles.login}>Signup</button>
+                </form>):
+                <></>
+            }
             <p style={styles.or}>or</p>
             <p style={styles.account}>Already have an account? <Link to="/login">Login</Link></p>
         </div>

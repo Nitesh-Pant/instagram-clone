@@ -1,10 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Foot from './Foot'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 const Search = () => {
+    const photosStyles = {
+        photoDiv: {
+            display: 'flex',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+        }
+    };
+
     const [username, setUsername] = useState('')
     const [users, setUsers] = useState([])
+    const [showImage, setShowImages] = useState(true)
+
 
     const navigate = useNavigate();
 
@@ -27,8 +37,8 @@ const Search = () => {
             paddingRight: '50px',
         },
         userList: {
-            color: 'black', 
-            border: '2px solid red',  
+            color: 'black',
+            border: '2px solid red',
             display: 'flex',
             alignItems: 'center',
             border: '2px solid red',
@@ -36,7 +46,6 @@ const Search = () => {
             padding: '5px',
             backgroundColor: '#FAF9F6',
             maxHeight: '40px',
-
         },
         input: {
             width: '90%',
@@ -46,48 +55,79 @@ const Search = () => {
         }
     }
 
-    function handleClick(userId){
+    function handleClick(userId) {
         const local = localStorage.getItem('store');
         navigate('/Profile', {
-            state: {id: userId, currentUserId: local}
+            state: { id: userId, currentUserId: local }
         })
     }
 
-    const typeSearch = async(e) => {
+    function viewPost() {
+        console.log('viewPost')
+    }
+
+    const typeSearch = async (e) => {
         setUsername(e.target.value)
-        if(username.length > 2){
+        if (username.length > 2) {
             const response = await fetch('http://localhost:3001/search/?name=' + username, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'authorization': localStorage.getItem('token')
                 }
             });
             const result = await response.json();
             console.log(result);
             setUsers(result)
+            setShowImages(false)
         }
-        else{
+        else {
             setUsers([])
+            setShowImages(true)
+
         }
     }
-  return (
-    <div>
-        <input type='text' id='name' placeholder='Search' onChange={(e)=> typeSearch(e)} style={styles.input}/>
-        <div style={styles.searchList}>
-        { users &&
-          users.map((user, index) => (
-            <div style={styles.userList} onClick={()=> handleClick(user.id)}>
-                <img src={user.avatarLink} style={styles.avatar} alt='avatar'/>
-                <span style={styles.username}>{user.username}</span>
+
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        const local = localStorage.getItem('store');
+        fetch("http://localhost:3001/search/posts/" + local)
+            .then(response => response.json())
+            .then(data => setPosts(data))
+    }, [])
+
+    return (
+        <div>
+            <input type='text' id='name' placeholder='Search' onChange={(e) => typeSearch(e)} style={styles.input} />
+            <div style={styles.searchList}>
+                {users &&
+                    users.map((user, index) => (
+                        <div style={styles.userList} onClick={() => handleClick(user.id)}>
+                            <img src={user.avatarLink} style={styles.avatar} alt='avatar' />
+                            <span style={styles.username}>{user.username}</span>
+                        </div>
+                    ))
+                }
             </div>
-          ))
-        }
+
+            {/* photos div*/}
+            {
+                showImage ?
+                    (<div>
+                        <div style={photosStyles.photoDiv}>
+                            {posts &&
+                                posts.map((post, index) => (
+                                    <img src={post.imageLink} alt="Posted Photo" style={{ width: '132px', height: '122px', margin: '5px' }} onClick={() => viewPost()} />
+                                ))}
+                        </div>
+                    </div>) :
+                    <></>
+            }
+
+            <Foot />
         </div>
 
-        <Foot/>
-    </div>
-
-  )
+    )
 }
 
 export default Search

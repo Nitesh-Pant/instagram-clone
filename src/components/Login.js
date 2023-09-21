@@ -54,8 +54,10 @@ export const Login = () => {
     });
     const result = await response.json();
     console.log(result);
-    if(result.msg == 'User Loggedin successfully'){
+    if(result.token){
         localStorage.setItem('store', result.result[0].id)
+        localStorage.setItem('token', result.token)
+
         navigate("/Footer");
     }
     else{
