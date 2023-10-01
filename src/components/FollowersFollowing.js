@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Foot from './Foot';
+import {localhost} from './api'
 
 function FollowersFollowing() {
     const styles = {
@@ -23,7 +24,7 @@ function FollowersFollowing() {
         userList: {
             display: 'flex',
             alignItems: 'center',
-            border: '2px solid red',
+           // border: '2px solid red',
             marginBottom: '10px',
             padding: '5px',
             backgroundColor: '#FAF9F6',
@@ -59,7 +60,7 @@ function FollowersFollowing() {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:3001/follow/${location.state.id}?type=${activeTab}`, {
+        fetch(`${localhost}/follow/${location.state.id}?type=${activeTab}`, {
             method: 'GET',
             headers: {
                 'authorization': localStorage.getItem('token'),

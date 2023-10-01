@@ -18,21 +18,25 @@
   max-width: 70vh;
   margin: auto;
   height: auto;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   background-color: white;
-  min-height: 100vh;
-  min-width: 70vh;
+  max-height: 100vh;
+  max-width: 80vh;
+  min-width: 46vh;
+  min-height: 99vh;
 }
 
 .containerDark {
   max-width: 70vh;
   margin: auto;
   height: auto;
-  border: 1px solid white;
+ /* border: 1px solid white;*/
   background-color: #333;
   color: #fff;
-  min-height: 100vh;
-  min-width: 70vh;
+  max-height: 100vh;
+  max-width: 80vh;
+  min-width: 46vh;
+  min-height: 99vh;
 }
 
 

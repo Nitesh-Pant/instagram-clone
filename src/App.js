@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import AddPost from './components/AddPost';
 import Profile from './components/Profile';
 import Search from './components/Search';
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
 import ViewPost from './components/ViewPost';
 import PrivateComponent from './components/PrivateComponent';
 import FollowersFollowing from './components/FollowersFollowing';
@@ -21,13 +21,16 @@ function App() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     console.log('mode is: ', darkMode)
+  };
+
+  useEffect(()=>{
     if(darkMode){
       setContainerMode('containerDark')
     }
     else{
       setContainerMode('containerLight')
     }
-  };
+  }, [darkMode])
 
   return (
     <context.Provider value={{ darkMode, toggleDarkMode }}>

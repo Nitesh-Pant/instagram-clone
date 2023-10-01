@@ -1,14 +1,18 @@
-import { isDisabled } from '@testing-library/user-event/dist/utils';
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate, Link } from "react-router-dom";
+import {localhost} from './api'
+import { context } from '../App';
+
 
 export const Signup = () => {
+    const {darkMode} = useContext(context)
+
     const styles = {
         or: {
-            color: 'black'
+            color: darkMode? 'white' : 'black',
         },
         account: {
-            color: 'black'
+            color: darkMode? 'white' : 'black',
         },
         instaLogo: {
             marginTop: '160px',
@@ -59,7 +63,7 @@ export const Signup = () => {
     const data = {'username': uname}
     
     if(uname.length > 3){
-        const response = await fetch('http://localhost:3001/signup/step1', {
+        const response = await fetch(`${localhost}/signup/step1`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -104,7 +108,7 @@ export const Signup = () => {
     e.preventDefault();
     const data = {'username': username, 'password': password, 'bio': bio, 'avatarLink': avatar}
     
-    const response = await fetch('http://localhost:3001/signup/step2', {
+    const response = await fetch(`${localhost}/signup/step2`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -132,13 +136,16 @@ export const Signup = () => {
                 (<form onSubmit={e => { handleUsername(e) }}>
                     <input type="text" id="username" placeholder="username" name="username" onChange={usernameCheck} required style={styles.input}/><br></br>
                     {isError && <div style={{color: 'red', fontSize: '15px', marginBottom: '0px'}}> {errorMessage} </div>}<br></br>
-                    <button style={styles.login} disabled={username.length < 4}>Continue</button>
+                    <button style={styles.login} disabled={username.length < 4 && isError == false}>Continue</button>
                 </form>) :
                 <></>
             }
             {stepTwo ?
                 (<form onSubmit={e => { handlePassword(e) }}>
                     <input type="password" id="password" placeholder="password" name="password" onChange={e => setPassword(e.target.value)} required style={styles.input}/><br></br>
+                    <div className="invalid-feedback">
+                        Please provide a valid city.
+                    </div>
                     <button style={styles.login} disabled={username.length < 4}>Continue</button>
                 </form>):
                 <></>
